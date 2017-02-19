@@ -45,18 +45,23 @@ class DisplayViewController: UIViewController {
         self.setupFilterChain()
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        pictureInput.removeAllTargets()
+        
+        super.viewWillDisappear(animated)
+    }
+    
     deinit {
         print("deinit")
     }
     
     func setupFilterChain() {
         
-        pictureInput = PictureInput(image: YuiImage)
+        pictureInput = PictureInput(image: MaYuImage)
         slider.minimumValue = filterModel.range?.0 ?? 0
         slider.maximumValue = filterModel.range?.1 ?? 0
         slider.value = filterModel.range?.2 ?? 0
         filter = filterModel.initCallback()
-        self.sliderValueChanged(slider: slider)
         
         switch filterModel.filterType! {
             
@@ -72,11 +77,12 @@ class DisplayViewController: UIViewController {
         case .operationGroup:
             if let actualFilter = filter as? OperationGroup {
                 pictureInput --> actualFilter --> renderView
-                pictureInput.processImage()
             }
         case .custom:
-            filterModel.customCallback!(pictureInput, filter as! BasicOperation, renderView)
+            filterModel.customCallback!(pictureInput, filter, renderView)
         }
+        
+        self.sliderValueChanged(slider: slider)
     }
     
     func sliderValueChanged(slider: UISlider) {
@@ -91,7 +97,7 @@ class DisplayViewController: UIViewController {
         switch filterModel.filterType! {
         case .imageGenerators: break
         case .basicOperation: pictureInput.processImage()
-        case .operationGroup: break
+        case .operationGroup: pictureInput.processImage()
         case .custom: pictureInput.processImage()
         }
     }

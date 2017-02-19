@@ -11,10 +11,10 @@ import GPUImage
 
 typealias InitCallback = () -> (AnyObject)
 typealias ValueChangedCallback = (AnyObject, Float) -> ()
-typealias CustomCallback = (PictureInput, BasicOperation, RenderView) -> ()
+typealias CustomCallback = (PictureInput, AnyObject, RenderView) -> ()
 
 let flowerImage = UIImage(contentsOfFile: Bundle.main.path(forResource: "Flower", ofType: "jpg")!)!
-let YuiImage = UIImage(contentsOfFile: Bundle.main.path(forResource: "Yui", ofType: "jpg")!)!
+let MaYuImage = UIImage(contentsOfFile: Bundle.main.path(forResource: "MaYu", ofType: "jpg")!)!
 
 enum FilterType {
     case imageGenerators
@@ -81,6 +81,7 @@ extension FilterModel {
                 })
             ],
             "Color adjustments 颜色调校": [
+                // BasicOperation
                 FilterModel(name: "BrightnessAdjustment 亮度",
                             filterType: .basicOperation,
                             range: (-1.0, 1.0, 0.0),
@@ -260,7 +261,7 @@ extension FilterModel {
                                 alphaBlend.mix = 1.0
                                 
                                 let inputImage = PictureInput(image: flowerImage)
-                                                   inputImage --> alphaBlend
+                                inputImage --> alphaBlend
                                 pictureInput --> chromaKeying --> alphaBlend --> renderView
                                 inputImage.processImage()
                 }),
@@ -280,7 +281,7 @@ extension FilterModel {
                                 highlightAndShadowTint.shadowTintIntensity = value
                                 highlightAndShadowTint.highlightTintIntensity = value
                 }),
-                
+                // OperationGroup
                 FilterModel(name: "SoftElegance SoftElegance",
                             filterType: .operationGroup,
                             initCallback: { SoftElegance() }),
@@ -290,6 +291,278 @@ extension FilterModel {
                 FilterModel(name: "AverageLuminanceThreshold 平均亮度阈值",
                             filterType: .operationGroup,
                             initCallback: { AverageLuminanceThreshold() }),
+            ],
+            "Image processing 图像处理": [
+                // BasicOperation
+                FilterModel(name: "TransformOperation 2-D或3-D变换",
+                            filterType: .basicOperation,
+                            range: (0.0, Float(M_PI), 0.0),
+                            initCallback: { TransformOperation() },
+                            valueChangedCallback: { (filter, value) in
+                                (filter as! TransformOperation).transform = Matrix4x4(CGAffineTransform(rotationAngle:CGFloat(value)))
+                }),
+                FilterModel(name: "Crop 裁剪",
+                            filterType: .basicOperation,
+                            range: (0.1, 1.0, 1.0),
+                            initCallback: { Crop() },
+                            valueChangedCallback: { (filter, value) in
+                                (filter as! Crop).cropSizeInPixels = Size(width: 674.0, height: 1200.0 * value)
+                }),
+                FilterModel(name: "LanczosResampling Lanczos重采样",
+                            filterType: .basicOperation,
+                            initCallback: { LanczosResampling() }),
+                FilterModel(name: "Sharpen 锐化",
+                            filterType: .basicOperation,
+                            range: (-4.0, 4.0, 0.0),
+                            initCallback: { Sharpen() },
+                            valueChangedCallback: { (filter, value) in
+                                (filter as! Sharpen).sharpness = value
+                }),
+                FilterModel(name: "Histogram 直方图",
+                            filterType: .custom,
+                            range: (1.0, 32.0, 16.0),
+                            initCallback: { Histogram(type:.rgb) },
+                            valueChangedCallback: { (filter, value) in
+                                (filter as! Histogram).downsamplingFactor = UInt(round(value))
+                },
+                            customCallback: { (pictureInput, basicOperation, renderView) in
+                                let histogram = basicOperation as! Histogram
+                                let histogramGraph = HistogramDisplay()
+                                histogramGraph.overriddenOutputSize = Size(width:SCREEN_WIDTH_Float, height:SCREEN_HEIGHT_Float)
+                                let alphaBlend = AlphaBlend()
+                                alphaBlend.mix = 0.5
+                                pictureInput --> alphaBlend
+                                pictureInput --> histogram --> histogramGraph --> alphaBlend --> renderView
+                }),
+                FilterModel(name: "HistogramDisplay 直方图显示",
+                            filterType: .basicOperation,
+                            initCallback: { HistogramDisplay() }),
+                FilterModel(name: "MotionBlur 运动模糊",
+                            filterType: .basicOperation,
+                            range: (0.0, 1.0, 0.0),
+                            initCallback: { MotionBlur() },
+                            valueChangedCallback: { (filter, value) in
+                                (filter as! MotionBlur).blurSize = value
+                }),
+                FilterModel(name: "ZoomBlur 运动模糊",
+                            filterType: .basicOperation,
+                            range: (0.0, 1.0, 0.0),
+                            initCallback: { ZoomBlur() },
+                            valueChangedCallback: { (filter, value) in
+                                (filter as! ZoomBlur).blurSize = value
+                }),
+                // TwoStageOperation
+                FilterModel(name: "GaussianBlur 高斯模糊",
+                            filterType: .basicOperation,
+                            range: (0.0, 5.0, 0.0),
+                            initCallback: { GaussianBlur() },
+                            valueChangedCallback: { (filter, value) in
+                                (filter as! GaussianBlur).blurRadiusInPixels = value
+                }),
+                FilterModel(name: "BoxBlur Box模糊",
+                            filterType: .basicOperation,
+                            range: (0.0, 5.0, 0.0),
+                            initCallback: { BoxBlur() },
+                            valueChangedCallback: { (filter, value) in
+                                (filter as! BoxBlur).blurRadiusInPixels = value
+                }),
+                FilterModel(name: "SingleComponentGaussianBlur 单一分量模糊",
+                            filterType: .basicOperation,
+                            range: (0.5, 5.0, 0.5),
+                            initCallback: { SingleComponentGaussianBlur() },
+                            valueChangedCallback: { (filter, value) in
+                                (filter as! SingleComponentGaussianBlur).blurRadiusInPixels = value
+                }),
+                FilterModel(name: "BilateralBlur 双边模糊",
+                            filterType: .custom,
+                            range: (0.0, 1.0, 0.0),
+                            initCallback: { BilateralBlur() },
+                            valueChangedCallback: { (filter, value) in
+                                (filter as! BilateralBlur).distanceNormalizationFactor = value
+                }),
+                FilterModel(name: "Dilation 扩张",
+                            filterType: .basicOperation,
+                            initCallback: { Dilation() }),
+                FilterModel(name: "Erosion 侵蚀",
+                            filterType: .basicOperation,
+                            initCallback: { Erosion() }),
+                // TextureSamplingOperation
+                FilterModel(name: "MedianFilter 三色中值",
+                            filterType: .basicOperation,
+                            initCallback: { MedianFilter() }),
+                FilterModel(name: "Convolution3x3 Convolution3x3",
+                            filterType: .basicOperation,
+                            initCallback: { Convolution3x3() },
+                            customCallback: { (pictureInput, basicOperation, renderView) in
+                                let convolution3x3 = basicOperation as! Convolution3x3
+                                convolution3x3.convolutionKernel = Matrix3x3(rowMajorValues:[
+                                    -1.0, 0.0, 1.0,
+                                    -2.0, 0.0, 2.0,
+                                    -1.0, 0.0, 1.0])
+                                pictureInput --> convolution3x3 --> renderView
+                }),
+                FilterModel(name: "SobelEdgeDetection Sobel边缘检测",
+                            filterType: .basicOperation,
+                            range: (0.0, 1.0, 1.0),
+                            initCallback: { SobelEdgeDetection() },
+                            valueChangedCallback: { (filter, value) in
+                                (filter as! SobelEdgeDetection).edgeStrength = value
+                }),
+                FilterModel(name: "PrewittEdgeDetection Prewitt边缘检测",
+                            filterType: .basicOperation,
+                            range: (0.0, 1.0, 1.0),
+                            initCallback: { PrewittEdgeDetection() },
+                            valueChangedCallback: { (filter, value) in
+                                (filter as! PrewittEdgeDetection).edgeStrength = value
+                }),
+                FilterModel(name: "ThresholdSobelEdgeDetection Sobel边缘检测",
+                            filterType: .basicOperation,
+                            range: (0.0, 1.0, 1.0),
+                            initCallback: { ThresholdSobelEdgeDetection() },
+                            valueChangedCallback: { (filter, value) in
+                                (filter as! ThresholdSobelEdgeDetection).edgeStrength = value
+                }),
+                FilterModel(name: "LocalBinaryPattern LocalBinaryPattern",
+                            filterType: .basicOperation,
+                            initCallback: { LocalBinaryPattern() }),
+                FilterModel(name: "ColorLocalBinaryPattern ColorLocalBinaryPattern",
+                            filterType: .basicOperation,
+                            initCallback: { ColorLocalBinaryPattern() }),
+                // OperationGroup
+                FilterModel(name: "UnsharpMask 反锐化",
+                            filterType: .operationGroup,
+                            range: (0.0, 10.0, 0.0),
+                            initCallback: { UnsharpMask() },
+                            valueChangedCallback: { (filter, value) in
+                                (filter as! UnsharpMask).intensity = value
+                }),
+                FilterModel(name: "iOSBlur iOS模糊",
+                            filterType: .operationGroup,
+                            range: (0.0, 1.0, 0.0),
+                            initCallback: { iOSBlur() },
+                            valueChangedCallback: { (filter, value) in
+                                (filter as! iOSBlur).blurRadiusInPixels = value * 100
+                }),
+                FilterModel(name: "TiltShift TiltShift",
+                            filterType: .operationGroup,
+                            range: (0.0, 1.0, 0.0),
+                            initCallback: { TiltShift() },
+                            valueChangedCallback: { (filter, value) in
+                                (filter as! TiltShift).blurRadiusInPixels = value * 10
+                }),
+                FilterModel(name: "HistogramEqualization 直方图补偿",
+                            filterType: .operationGroup,
+                            initCallback: { HistogramEqualization(type:.rgb) }),
+                FilterModel(name: "CannyEdgeDetection Canny边缘检测",
+                            filterType: .operationGroup,
+                            range: (0.0, 1.0, 0.0),
+                            initCallback: { CannyEdgeDetection() },
+                            valueChangedCallback: { (filter, value) in
+                                (filter as! CannyEdgeDetection).blurRadiusInPixels = value * 10
+                }),
+                FilterModel(name: "HarrisCornerDetector 哈里斯角点检测",
+                            filterType: .custom,
+                            range: (0.0, 1.0, 0.0),
+                            initCallback: { HarrisCornerDetector() },
+                            valueChangedCallback: { (filter, value) in
+                                (filter as! HarrisCornerDetector).threshold = value
+                },
+                            customCallback: { (pictureInput, basicOperation, renderView) in
+                                let harrisCornerDetector = basicOperation as! HarrisCornerDetector
+                                let crosshairGenerator = CrosshairGenerator(size:Size(width:SCREEN_WIDTH_Float, height:SCREEN_HEIGHT_Float))
+                                crosshairGenerator.crosshairWidth = 15.0
+                                crosshairGenerator.crosshairColor = .red
+                                
+                                harrisCornerDetector.cornersDetectedCallback = { corners in
+                                    crosshairGenerator.renderCrosshairs(corners)
+                                }
+                                
+                                pictureInput --> harrisCornerDetector
+                                
+                                let blendFilter = AlphaBlend()
+                                pictureInput --> blendFilter --> renderView
+                                crosshairGenerator --> blendFilter
+                }),
+                FilterModel(name: "NobleCornerDetector Noble哈里斯角点检测",
+                            filterType: .custom,
+                            range: (0.0, 1.0, 0.0),
+                            initCallback: { NobleCornerDetector() },
+                            valueChangedCallback: { (filter, value) in
+                                (filter as! NobleCornerDetector).threshold = value
+                },
+                            customCallback: { (pictureInput, basicOperation, renderView) in
+                                let harrisCornerDetector = basicOperation as! NobleCornerDetector
+                                let crosshairGenerator = CrosshairGenerator(size:Size(width:SCREEN_WIDTH_Float, height:SCREEN_HEIGHT_Float))
+                                crosshairGenerator.crosshairWidth = 15.0
+                                crosshairGenerator.crosshairColor = .red
+                                
+                                harrisCornerDetector.cornersDetectedCallback = { corners in
+                                    crosshairGenerator.renderCrosshairs(corners)
+                                }
+                                
+                                pictureInput --> harrisCornerDetector
+                                
+                                let blendFilter = AlphaBlend()
+                                pictureInput --> blendFilter --> renderView
+                                crosshairGenerator --> blendFilter
+                }),
+                FilterModel(name: "ShiTomasiFeatureDetector ShiTomasi检测",
+                            filterType: .custom,
+                            range: (0.0, 1.0, 0.0),
+                            initCallback: { ShiTomasiFeatureDetector() },
+                            valueChangedCallback: { (filter, value) in
+                                (filter as! ShiTomasiFeatureDetector).threshold = value
+                },
+                            customCallback: { (pictureInput, basicOperation, renderView) in
+                                let harrisCornerDetector = basicOperation as! ShiTomasiFeatureDetector
+                                let crosshairGenerator = CrosshairGenerator(size:Size(width:SCREEN_WIDTH_Float, height:SCREEN_HEIGHT_Float))
+                                crosshairGenerator.crosshairWidth = 15.0
+                                crosshairGenerator.crosshairColor = .red
+                                
+                                harrisCornerDetector.cornersDetectedCallback = { corners in
+                                    crosshairGenerator.renderCrosshairs(corners)
+                                }
+                                
+                                pictureInput --> harrisCornerDetector
+                                
+                                let blendFilter = AlphaBlend()
+                                pictureInput --> blendFilter --> renderView
+                                crosshairGenerator --> blendFilter
+                }),
+                FilterModel(name: "OpeningFilter 颜色侵蚀",
+                            filterType: .operationGroup,
+                            initCallback: { OpeningFilter() }),
+                FilterModel(name: "ClosingFilter 颜色扩张",
+                            filterType: .operationGroup,
+                            initCallback: { ClosingFilter() }),
+                FilterModel(name: "LowPassFilter 低通滤镜",
+                            filterType: .operationGroup,
+                            range: (0.0, 1.0, 0.5),
+                            initCallback: { LowPassFilter() },
+                            valueChangedCallback: { (filter, value) in
+                                (filter as! LowPassFilter).strength = value
+                }),
+                FilterModel(name: "HighPassFilter 高通滤镜",
+                            filterType: .operationGroup,
+                            range: (0.0, 1.0, 0.5),
+                            initCallback: { HighPassFilter() },
+                            valueChangedCallback: { (filter, value) in
+                                (filter as! HighPassFilter).strength = value
+                }),
+                FilterModel(name: "MotionDetector 运动检测",
+                            filterType: .operationGroup,
+                            range: (0.0, 1.0, 0.5),
+                            initCallback: { MotionDetector() },
+                            valueChangedCallback: { (filter, value) in
+                                (filter as! MotionDetector).lowPassStrength = value
+                }),
+                FilterModel(name: "ColourFASTFeatureDetection ColourFAST特征描述符",
+                            filterType: .operationGroup,
+                            range: (0.0, 1.0, 0.0),
+                            initCallback: { ColourFASTFeatureDetection() },
+                            valueChangedCallback: { (filter, value) in
+                                (filter as! ColourFASTFeatureDetection).blurRadiusInPixels = value
+                }),
             ]
         ];
     }

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		4A0AB09D1E55E6B400093978 /* Flower.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4A0AB09C1E55E6B400093978 /* Flower.jpg */; };
 		4A0AB0A51E55F1F200093978 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4A0AB0A41E55F1F200093978 /* Assets.xcassets */; };
+		4A0E31561E59457600DC1BF9 /* MaYu.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4A0E31551E59457600DC1BF9 /* MaYu.jpg */; };
 		4A70A3801E51FAEC0091C63E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A70A37F1E51FAEC0091C63E /* AppDelegate.swift */; };
 		4A70A38A1E51FAEC0091C63E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4A70A3881E51FAEC0091C63E /* LaunchScreen.storyboard */; };
 		4A70A39C1E51FB560091C63E /* GPUImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A70A3971E51FB4C0091C63E /* GPUImage.framework */; };
@@ -16,7 +17,6 @@
 		4A70A3A31E51FBA70091C63E /* DisplayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A70A39F1E51FBA70091C63E /* DisplayViewController.swift */; };
 		4A70A3A41E51FBA70091C63E /* FilterListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A70A3A01E51FBA70091C63E /* FilterListTableViewController.swift */; };
 		4A70A3A51E51FBA70091C63E /* FilterModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A70A3A11E51FBA70091C63E /* FilterModel.swift */; };
-		4A70A3A61E51FBA70091C63E /* Yui.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4A70A3A21E51FBA70091C63E /* Yui.jpg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,6 +59,7 @@
 /* Begin PBXFileReference section */
 		4A0AB09C1E55E6B400093978 /* Flower.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Flower.jpg; sourceTree = "<group>"; };
 		4A0AB0A41E55F1F200093978 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		4A0E31551E59457600DC1BF9 /* MaYu.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = MaYu.jpg; sourceTree = "<group>"; };
 		4A70A37C1E51FAEC0091C63E /* SampleCode_GPUImage2_FilterList.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SampleCode_GPUImage2_FilterList.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4A70A37F1E51FAEC0091C63E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4A70A3891E51FAEC0091C63E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -67,7 +68,6 @@
 		4A70A39F1E51FBA70091C63E /* DisplayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayViewController.swift; sourceTree = "<group>"; };
 		4A70A3A01E51FBA70091C63E /* FilterListTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterListTableViewController.swift; sourceTree = "<group>"; };
 		4A70A3A11E51FBA70091C63E /* FilterModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterModel.swift; sourceTree = "<group>"; };
-		4A70A3A21E51FBA70091C63E /* Yui.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Yui.jpg; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,7 +102,7 @@
 		4A70A37E1E51FAEC0091C63E /* SampleCode_GPUImage2_FilterList */ = {
 			isa = PBXGroup;
 			children = (
-				4A70A3A21E51FBA70091C63E /* Yui.jpg */,
+				4A0E31551E59457600DC1BF9 /* MaYu.jpg */,
 				4A0AB09C1E55E6B400093978 /* Flower.jpg */,
 				4A70A37F1E51FAEC0091C63E /* AppDelegate.swift */,
 				4A70A3A01E51FBA70091C63E /* FilterListTableViewController.swift */,
@@ -158,6 +158,7 @@
 				TargetAttributes = {
 					4A70A37B1E51FAEC0091C63E = {
 						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = 625VCK4L2Z;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -209,9 +210,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				4A0AB09D1E55E6B400093978 /* Flower.jpg in Resources */,
-				4A70A3A61E51FBA70091C63E /* Yui.jpg in Resources */,
 				4A0AB0A51E55F1F200093978 /* Assets.xcassets in Resources */,
 				4A70A38A1E51FAEC0091C63E /* LaunchScreen.storyboard in Resources */,
+				4A0E31561E59457600DC1BF9 /* MaYu.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -348,6 +349,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 625VCK4L2Z;
 				INFOPLIST_FILE = SampleCode_GPUImage2_FilterList/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "Willie.SampleCode-GPUImage2-FilterList";
@@ -360,6 +362,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 625VCK4L2Z;
 				INFOPLIST_FILE = SampleCode_GPUImage2_FilterList/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "Willie.SampleCode-GPUImage2-FilterList";
