@@ -78,6 +78,16 @@ class DisplayViewController: UIViewController {
             if let actualFilter = filter as? OperationGroup {
                 pictureInput --> actualFilter --> renderView
             }
+            
+        case .blend:
+            if let actualFilter = filter as? BasicOperation {
+                let blendImgae = PictureInput(image: flowerImage)
+                blendImgae --> actualFilter
+                pictureInput --> actualFilter --> renderView
+                blendImgae.processImage()
+                pictureInput.processImage()
+            }
+            
         case .custom:
             filterModel.customCallback!(pictureInput, filter, renderView)
         }
@@ -94,11 +104,8 @@ class DisplayViewController: UIViewController {
             slider.isHidden = true
         }
         
-        switch filterModel.filterType! {
-        case .imageGenerators: break
-        case .basicOperation: pictureInput.processImage()
-        case .operationGroup: pictureInput.processImage()
-        case .custom: pictureInput.processImage()
+        if filterModel.filterType! != .imageGenerators {
+            pictureInput.processImage()
         }
     }
 }

@@ -21,6 +21,7 @@ enum FilterType {
     case basicOperation
     case operationGroup
     case custom
+    case blend
 }
 
 class FilterModel: NSObject {
@@ -562,7 +563,93 @@ extension FilterModel {
                             initCallback: { ColourFASTFeatureDetection() },
                             valueChangedCallback: { (filter, value) in
                                 (filter as! ColourFASTFeatureDetection).blurRadiusInPixels = value
+                })
+            ],
+            "Blending modes 混合模式": [
+                FilterModel(name: "ChromaKeyBlend 颜色替换",
+                            filterType: .blend,
+                            range: (0.0, 1.0, 0.0),
+                            initCallback: { ChromaKeyBlend() },
+                            valueChangedCallback: { (filter, value) in
+                                (filter as! ChromaKeyBlend).thresholdSensitivity = value
                 }),
+                FilterModel(name: "DissolveBlend 消失混合",
+                            filterType: .blend,
+                            range: (0.0, 1.0, 0.0),
+                            initCallback: { DissolveBlend() },
+                            valueChangedCallback: { (filter, value) in
+                                (filter as! DissolveBlend).mix = value
+                }),
+                FilterModel(name: "MultiplyBlend 乘法混合",
+                            filterType: .blend,
+                            initCallback: { DissolveBlend() }),
+                FilterModel(name: "AddBlend 加法混合",
+                            filterType: .blend,
+                            initCallback: { AddBlend() }),
+                FilterModel(name: "SubtractBlend 减法混合",
+                            filterType: .blend,
+                            initCallback: { SubtractBlend() }),
+                FilterModel(name: "DivideBlend 分割混合",
+                            filterType: .blend,
+                            initCallback: { DivideBlend() }),
+                FilterModel(name: "OverlayBlend 重叠混合",
+                            filterType: .blend,
+                            initCallback: { OverlayBlend() }),
+                FilterModel(name: "DarkenBlend 颜色分量最小值混合",
+                            filterType: .blend,
+                            initCallback: { DarkenBlend() }),
+                FilterModel(name: "LightenBlend 颜色分量最大值混合",
+                            filterType: .blend,
+                            initCallback: { LightenBlend() }),
+                FilterModel(name: "ColorBurnBlend 颜色加深混合",
+                            filterType: .blend,
+                            initCallback: { ColorBurnBlend() }),
+                FilterModel(name: "ColorDodgeBlend 颜色加亮混合",
+                            filterType: .blend,
+                            initCallback: { ColorDodgeBlend() }),
+                FilterModel(name: "ScreenBlend 滤色混合",
+                            filterType: .blend,
+                            initCallback: { ScreenBlend() }),
+                FilterModel(name: "ExclusionBlend 排除混合",
+                            filterType: .blend,
+                            initCallback: { ExclusionBlend() }),
+                FilterModel(name: "DifferenceBlend 差异混合",
+                            filterType: .blend,
+                            initCallback: { DifferenceBlend() }),
+                FilterModel(name: "HardLightBlend 强光混合",
+                            filterType: .blend,
+                            initCallback: { HardLightBlend() }),
+                FilterModel(name: "SoftLightBlend 柔光混合",
+                            filterType: .blend,
+                            initCallback: { SoftLightBlend() }),
+                FilterModel(name: "AlphaBlend Alpha混合",
+                            filterType: .blend,
+                            range: (0.0, 1.0, 0.0),
+                            initCallback: { AlphaBlend() },
+                            valueChangedCallback: { (filter, value) in
+                                (filter as! AlphaBlend).mix = value
+                }),
+                FilterModel(name: "SourceOverBlend 图像源混合",
+                            filterType: .blend,
+                            initCallback: { SourceOverBlend() }),
+                FilterModel(name: "NormalBlend 普通混合",
+                            filterType: .blend,
+                            initCallback: { NormalBlend() }),
+                FilterModel(name: "ColorBlend 颜色混合",
+                            filterType: .blend,
+                            initCallback: { ColorBlend() }),
+                FilterModel(name: "HueBlend 色调混合",
+                            filterType: .blend,
+                            initCallback: { HueBlend() }),
+                FilterModel(name: "SaturationBlend 饱和度混合",
+                            filterType: .blend,
+                            initCallback: { SaturationBlend() }),
+                FilterModel(name: "LuminosityBlend 亮度混合",
+                            filterType: .blend,
+                            initCallback: { LuminosityBlend() }),
+                FilterModel(name: "LinearBurnBlend 线性加深混合",
+                            filterType: .blend,
+                            initCallback: { LinearBurnBlend() }),
             ]
         ];
     }
