@@ -44,7 +44,7 @@ class DisplayViewController: UIViewController {
         title = filterModel.name
         self.setupFilterChain()
     }
-    
+
     override func viewWillDisappear(_ animated: Bool) {
         pictureInput.removeAllTargets()
         
@@ -98,6 +98,7 @@ class DisplayViewController: UIViewController {
     func sliderValueChanged(slider: UISlider) {
         
         print("slider value: \(slider.value)")
+        
         if let actualCallback = filterModel.valueChangedCallback {
             actualCallback(filter, slider.value)
         } else {

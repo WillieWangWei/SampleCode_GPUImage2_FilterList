@@ -566,6 +566,7 @@ extension FilterModel {
                 })
             ],
             "Blending modes 混合模式": [
+                // BasicOperation
                 FilterModel(name: "ChromaKeyBlend 颜色替换",
                             filterType: .blend,
                             range: (0.0, 1.0, 0.0),
@@ -650,6 +651,156 @@ extension FilterModel {
                 FilterModel(name: "LinearBurnBlend 线性加深混合",
                             filterType: .blend,
                             initCallback: { LinearBurnBlend() }),
+            ],
+            "Visual effects 视觉特效": [
+                FilterModel(name: "Pixellate 像素化",
+                            filterType: .basicOperation,
+                            range: (0.0, 1.0, 0.0),
+                            initCallback: { Pixellate() },
+                            valueChangedCallback: { (filter, value) in
+                                (filter as! Pixellate).fractionalWidthOfAPixel = value
+                }),
+                FilterModel(name: "PolarPixellate 基于极坐标的像素化",
+                            filterType: .basicOperation,
+                            range: (0.0, 1.0, 0.0),
+                            initCallback: { PolarPixellate() },
+                            valueChangedCallback: { (filter, value) in
+                                (filter as! PolarPixellate).center = Position(value, value)
+                }),
+                FilterModel(name: "PolkaDot 彩色点",
+                            filterType: .basicOperation,
+                            range: (0.0, 1.0, 0.0),
+                            initCallback: { PolkaDot() },
+                            valueChangedCallback: { (filter, value) in
+                                (filter as! PolkaDot).fractionalWidthOfAPixel = value
+                }),
+                FilterModel(name: "Halftone 半色调",
+                            filterType: .basicOperation,
+                            range: (0.0, 1.0, 0.0),
+                            initCallback: { Halftone() },
+                            valueChangedCallback: { (filter, value) in
+                                (filter as! Halftone).fractionalWidthOfAPixel = value
+                }),
+                FilterModel(name: "Crosshatch 交叉排线",
+                            filterType: .basicOperation,
+                            range: (0.0, 1.0, 0.5),
+                            initCallback: { Crosshatch() },
+                            valueChangedCallback: { (filter, value) in
+                                (filter as! Crosshatch).crossHatchSpacing = value
+                }),
+                FilterModel(name: "SketchFilter 素描滤镜",
+                            filterType: .basicOperation,
+                            range: (0.0, 1.0, 1.0),
+                            initCallback: { SketchFilter() },
+                            valueChangedCallback: { (filter, value) in
+                                (filter as! SketchFilter).edgeStrength = value
+                }),
+                FilterModel(name: "ThresholdSketchFilter 阈值素描滤镜",
+                               filterType: .basicOperation,
+                               range: (0.0, 1.0, 1.0),
+                               initCallback: { ThresholdSketchFilter() },
+                               valueChangedCallback: { (filter, value) in
+                                (filter as! ThresholdSketchFilter).edgeStrength = value
+                }),
+                FilterModel(name: "ToonFilter 黑色描边",
+                            filterType: .basicOperation,
+                            range: (0.0, 1.0, 1.0),
+                            initCallback: { ToonFilter() },
+                            valueChangedCallback: { (filter, value) in
+                                (filter as! ToonFilter).threshold = value
+                }),
+                FilterModel(name: "SmoothToonFilter 平滑黑色描边",
+                            filterType: .basicOperation,
+                            range: (0.0, 10.0, 1.0),
+                            initCallback: { SmoothToonFilter() },
+                            valueChangedCallback: { (filter, value) in
+                                (filter as! SmoothToonFilter).blurRadiusInPixels = value
+                }),
+                FilterModel(name: "EmbossFilter 浮雕滤镜",
+                            filterType: .basicOperation,
+                            range: (0.0, 4.0, 0.0),
+                            initCallback: { EmbossFilter() },
+                            valueChangedCallback: { (filter, value) in
+                                (filter as! EmbossFilter).intensity = value
+                }),
+                FilterModel(name: "Posterize 色调分离",
+                            filterType: .basicOperation,
+                            range: (1.0, 256.0, 1.0),
+                            initCallback: { Posterize() },
+                            valueChangedCallback: { (filter, value) in
+                                (filter as! Posterize).colorLevels = value
+                }),
+                FilterModel(name: "SwirlDistortion 旋涡扭曲",
+                            filterType: .basicOperation,
+                            range: (0.0, 1.0, 0.0),
+                            initCallback: { SwirlDistortion() },
+                            valueChangedCallback: { (filter, value) in
+                                (filter as! SwirlDistortion).radius = value
+                }),
+                FilterModel(name: "BulgeDistortion 凸起扭曲",
+                            filterType: .basicOperation,
+                            range: (-1.0, 1.0, 0.0),
+                            initCallback: { BulgeDistortion() },
+                            valueChangedCallback: { (filter, value) in
+                                (filter as! BulgeDistortion).scale = value
+                }),
+                FilterModel(name: "PinchDistortion 捏合扭曲",
+                            filterType: .basicOperation,
+                            range: (0.0, 1.0, 0.0),
+                            initCallback: { PinchDistortion() },
+                            valueChangedCallback: { (filter, value) in
+                                (filter as! PinchDistortion).center = Position(value, value)
+                                (filter as! PinchDistortion).scale = -2
+                                (filter as! PinchDistortion).radius = 0.2
+                }),
+                FilterModel(name: "StretchDistortion 拉伸扭曲",
+                            filterType: .basicOperation,
+                            range: (0.0, 1.0, 0.0),
+                            initCallback: { StretchDistortion() },
+                            valueChangedCallback: { (filter, value) in
+                                (filter as! StretchDistortion).center = Position(value, value)
+                }),
+                FilterModel(name: "SphereRefraction 球体折射",
+                            filterType: .basicOperation,
+                            range: (0.0, 1.0, 0.0),
+                            initCallback: { SphereRefraction() },
+                            valueChangedCallback: { (filter, value) in
+                                (filter as! SphereRefraction).refractiveIndex = value
+                }),
+                FilterModel(name: "GlassSphereRefraction 正像球体折射",
+                            filterType: .basicOperation,
+                            range: (0.0, 1.0, 0.0),
+                            initCallback: { GlassSphereRefraction() },
+                            valueChangedCallback: { (filter, value) in
+                                (filter as! GlassSphereRefraction).refractiveIndex = value
+                }),
+                FilterModel(name: "Vignette 渐晕",
+                            filterType: .basicOperation,
+                            range: (0.0, 1.0, 0.0),
+                            initCallback: { Vignette() },
+                            valueChangedCallback: { (filter, value) in
+                                (filter as! Vignette).color = Color(red: value, green: value, blue: 0)
+                }),
+                FilterModel(name: "KuwaharaFilter Kuwahara滤镜",
+                            filterType: .basicOperation,
+                            range: (0.0, 10.0, 0.0),
+                            initCallback: { KuwaharaFilter() },
+                            valueChangedCallback: { (filter, value) in
+                                (filter as! KuwaharaFilter).radius = Int(value)
+                }),
+                FilterModel(name: "KuwaharaRadius3Filter KuwaharaRadius3滤镜",
+                            filterType: .basicOperation,
+                            initCallback: { KuwaharaRadius3Filter() }),
+                FilterModel(name: "CGAColorspaceFilter CGA颜色空间",
+                            filterType: .basicOperation,
+                            initCallback: { CGAColorspaceFilter() }),
+                FilterModel(name: "Solarize 过度曝光",
+                            filterType: .basicOperation,
+                            range: (0.0, 1.0, 0.0),
+                            initCallback: { Solarize() },
+                            valueChangedCallback: { (filter, value) in
+                                (filter as! Solarize).threshold = value
+                }),
             ]
         ];
     }
