@@ -1,16 +1,19 @@
-#if os(Linux)
-#if GLES
-    import COpenGLES.gles2
-    #else
-    import COpenGL
+#if canImport(OpenGL)
+import OpenGL.GL3
 #endif
-#else
-#if GLES
-    import OpenGLES
-    #else
-    import OpenGL.GL3
+
+#if canImport(OpenGLES)
+import OpenGLES
 #endif
+
+#if canImport(COpenGLES)
+import COpenGLES.gles2
 #endif
+
+#if canImport(COpenGL)
+import COpenGL
+#endif
+
 
 /* Unlike other filters, this one uses a grid of GL_POINTs to sample the incoming image in a grid. A custom vertex shader reads the color in the texture at its position
  and outputs a bin position in the final histogram as the vertex position. That point is then written into the image of the histogram using translucent pixels.
@@ -62,10 +65,8 @@ public class Histogram: BasicOperation {
         
         clearFramebufferWithColor(Color.black)
 
-        glBlendEquation(GLenum(GL_FUNC_ADD))
-        glBlendFunc(GLenum(GL_ONE), GLenum(GL_ONE))
-        glEnable(GLenum(GL_BLEND))
-
+        enableAdditiveBlending()
+        
         shader.use()
         guard let positionAttribute = shader.attributeIndex("position") else { fatalError("A position attribute was missing from the shader program during rendering.") }
         glVertexAttribPointer(positionAttribute, 4, GLenum(GL_UNSIGNED_BYTE), 0, (GLint(downsamplingFactor) - 1) * 4, data)
@@ -85,7 +86,7 @@ public class Histogram: BasicOperation {
             glDrawArrays(GLenum(GL_POINTS), 0, inputSize.width * inputSize.height / GLint(downsamplingFactor))
         }
 
-        glDisable(GLenum(GL_BLEND))
-        data.deallocate(capacity:inputByteSize)
+        disableBlending()
+        data.deallocate()
     }
 }

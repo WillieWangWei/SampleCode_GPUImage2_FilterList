@@ -1,16 +1,19 @@
-#if os(Linux)
-#if GLES
-    import COpenGLES.gles2
-    #else
-    import COpenGL
+#if canImport(OpenGL)
+import OpenGL.GL3
 #endif
-#else
-#if GLES
-    import OpenGLES
-    #else
-    import OpenGL.GL
+
+#if canImport(OpenGLES)
+import OpenGLES
 #endif
+
+#if canImport(COpenGLES)
+import COpenGLES.gles2
 #endif
+
+#if canImport(COpenGL)
+import COpenGL
+#endif
+
 
 public enum Line {
     case infinite(slope:Float, intercept:Float)
@@ -63,13 +66,12 @@ public class LineGenerator: ImageGenerator {
         let lineEndpoints = lines.flatMap{$0.toGLEndpoints()}
         glVertexAttribPointer(positionAttribute, 2, GLenum(GL_FLOAT), 0, 0, lineEndpoints)
         
-        glBlendEquation(GLenum(GL_FUNC_ADD))
-        glBlendFunc(GLenum(GL_ONE), GLenum(GL_ONE))
-        glEnable(GLenum(GL_BLEND))
+        
+        enableAdditiveBlending()
 
         glDrawArrays(GLenum(GL_LINES), 0, GLsizei(lines.count) * 2)
 
-        glDisable(GLenum(GL_BLEND))
+        disableBlending()
 
         notifyTargets()
     }

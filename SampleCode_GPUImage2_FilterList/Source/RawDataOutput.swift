@@ -1,15 +1,17 @@
-#if os(Linux)
-#if GLES
-    import COpenGLES.gles2
-    #else
-    import COpenGL
+#if canImport(OpenGL)
+import OpenGL.GL3
 #endif
-#else
-#if GLES
-    import OpenGLES
-    #else
-    import OpenGL.GL3
+
+#if canImport(OpenGLES)
+import OpenGLES
 #endif
+
+#if canImport(COpenGLES)
+import COpenGLES.gles2
+#endif
+
+#if canImport(COpenGL)
+import COpenGL
 #endif
 
 public class RawDataOutput: ImageConsumer {
@@ -28,7 +30,7 @@ public class RawDataOutput: ImageConsumer {
 
         renderFramebuffer.activateFramebufferForRendering()
         clearFramebufferWithColor(Color.black)
-        renderQuadWithShader(sharedImageProcessingContext.passthroughShader, uniformSettings:ShaderUniformSettings(), vertices:standardImageVertices, inputTextures:[framebuffer.texturePropertiesForOutputRotation(.noRotation)])
+        renderQuadWithShader(sharedImageProcessingContext.passthroughShader, uniformSettings:ShaderUniformSettings(), vertexBufferObject:sharedImageProcessingContext.standardImageVBO, inputTextures:[framebuffer.texturePropertiesForOutputRotation(.noRotation)])
         framebuffer.unlock()
         
         var data = [UInt8](repeating:0, count:Int(framebuffer.size.width * framebuffer.size.height * 4))

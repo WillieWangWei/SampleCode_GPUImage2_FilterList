@@ -95,7 +95,7 @@ class DisplayViewController: UIViewController {
         self.sliderValueChanged(slider: slider)
     }
     
-    func sliderValueChanged(slider: UISlider) {
+    @objc func sliderValueChanged(slider: UISlider) {
         
         print("slider value: \(slider.value)")
         
